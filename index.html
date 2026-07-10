@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <h2>📋 TaskFlow</h2>
+
+        <button class="menu-btn active">🏠 Home</button>
+        <button class="menu-btn">📚 Study</button>
+        <button class="menu-btn">💼 Work</button>
+        <button class="menu-btn">🏠 Personal</button>
+        <button class="menu-btn">⭐ Important</button>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <header>
+
+            <h1>📝 My To-Do List</h1>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="🔍 Search tasks..."
+            >
+
+        </header>
+
+        <section class="add-task">
+
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="add a new task..."
+            >
+
+            <select id="category">
+                <option>Study</option>
+                <option>Work</option>
+                <option selected>Personal</option>
+            </select>
+
+            <select id="priority">
+                <option>🔴 High</option>
+                <option selected>🟡 Medium</option>
+                <option>🟢 Low</option>
+            </select>
+
+            <button id="addBtn">➕ Add Task</button>
+
+        </section>
+
+        <ul id="taskList">
+
+        </ul>
+
+        <section class="stats">
+
+            <div id="totalTasks">📋 Total : 0</div>
+
+            <div id="completedTasks">✅ Done : 0</div>
+
+            <div id="remainingTasks">⏳ Left : 0</div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="script.js"></script>
+<footer class="footer">
+    Made with ❤️ by Aashi
+</footer>
+
+
+</body>
+</html>
