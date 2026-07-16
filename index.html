@@ -1,93 +1,139 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>TaskFlow</title>
 
     <link rel="stylesheet" href="style.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
+
 <body>
 
-<div class="app">
+<div class="overlay" id="overlay"></div>
+
+<div class="container">
 
     <!-- Sidebar -->
-    <aside class="sidebar">
 
-        <h2>📋 TaskFlow</h2>
+    <aside class="sidebar" id="sidebar">
 
-        <button class="menu-btn active">🏠 Home</button>
-        <button class="menu-btn">📚 Study</button>
-        <button class="menu-btn">💼 Work</button>
-        <button class="menu-btn">🏠 Personal</button>
-        <button class="menu-btn">⭐ Important</button>
+        <div class="logo">
+
+            <i class="fa-solid fa-list-check"></i>
+
+            <span>TaskFlow</span>
+
+        </div>
+
+        <ul>
+
+            <li class="active">
+                <i class="fa-solid fa-house"></i>
+                Home
+            </li>
+
+            <li>
+                <i class="fa-solid fa-book"></i>
+                Study
+            </li>
+
+            <li>
+                <i class="fa-solid fa-briefcase"></i>
+                Work
+            </li>
+
+            <li>
+                <i class="fa-solid fa-heart"></i>
+                Personal
+            </li>
+
+            <li>
+                <i class="fa-solid fa-star"></i>
+                Important
+            </li>
+
+        </ul>
 
     </aside>
 
-    <!-- Main Content -->
+    <!-- Main -->
+
     <main class="main">
 
-        <header>
+        <button class="menu-btn" id="menuBtn">
 
-            <h1>📝 My To-Do List</h1>
+            <i class="fa-solid fa-bars"></i>
 
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="🔍 Search tasks..."
-            >
+        </button>
 
-        </header>
+        <h1>📝 My To-Do List</h1>
 
-        <section class="add-task">
+        <div class="input-box">
 
             <input
                 type="text"
                 id="taskInput"
-                placeholder="add a new task..."
-            >
+                placeholder="Enter your task...">
 
             <select id="category">
+
                 <option>Study</option>
                 <option>Work</option>
-                <option selected>Personal</option>
+                <option>Personal</option>
+                <option>Important</option>
+
             </select>
 
-            <select id="priority">
-                <option>🔴 High</option>
-                <option selected>🟡 Medium</option>
-                <option>🟢 Low</option>
-            </select>
+            <button id="addBtn">
 
-            <button id="addBtn">➕ Add Task</button>
+                <i class="fa-solid fa-plus"></i>
 
-        </section>
+                Add Task
 
-        <ul id="taskList">
+            </button>
 
-        </ul>
+        </div>
 
-        <section class="stats">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍 Search Task...">
 
-            <div id="totalTasks">📋 Total : 0</div>
+        <ul id="taskList"></ul>
 
-            <div id="completedTasks">✅ Done : 0</div>
+        <div class="stats">
 
-            <div id="remainingTasks">⏳ Left : 0</div>
+            <div>Total : <span id="total">0</span></div>
 
-        </section>
+            <div>Completed : <span id="completed">0</span></div>
+
+            <div>Remaining : <span id="left">0</span></div>
+
+        </div>
 
     </main>
 
 </div>
 
 <script src="script.js"></script>
-<footer class="footer">
-    Made with ❤️ by Aashi
-</footer>
-
 
 </body>
+
 </html>

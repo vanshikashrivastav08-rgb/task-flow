@@ -1,193 +1,252 @@
-const addBtn = document.getElementById("addBtn");
+// ==========================
+// TaskFlow Pro
+// ==========================
+
 const taskInput = document.getElementById("taskInput");
+const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
 const searchInput = document.getElementById("searchInput");
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
 
-// Load tasks when page opens
-loadTasks();
+const total = document.getElementById("total");
+const completed = document.getElementById("completed");
+const left = document.getElementById("left");
 
-// Add task button
-addBtn.addEventListener("click", addTask);
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-// Press Enter to add task
-taskInput.addEventListener("keypress", function(e){
-    if(e.key === "Enter"){
-        addTask();
-    }
-});
+// ==========================
+// Save Tasks
+// ==========================
 
-// Search tasks
-searchInput.addEventListener("keyup", searchTasks);
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
-function addTask() {
+// ==========================
+// Update Statistics
+// ==========================
 
-    const task = taskInput.value.trim();
+function updateStats() {
 
-    if(task === ""){
+    total.textContent = tasks.length;
+
+    const completedTasks = tasks.filter(task => task.completed).length;
+
+    completed.textContent = completedTasks;
+
+    left.textContent = tasks.length - completedTasks;
+
+}
+
+// ==========================
+// Render Tasks
+// ==========================
+
+function renderTasks(filter = "") {
+
+    taskList.innerHTML = "";
+
+    tasks.forEach((task, index) => {
+
+        if (!task.text.toLowerCase().includes(filter.toLowerCase())) return;
+
+        const li = document.createElement("li");
+
+        li.className = task.completed ? "task completed" : "task";
+
+        li.innerHTML = `
+
+        <div class="task-left">
+
+            <input
+                type="checkbox"
+                ${task.completed ? "checked" : ""}
+                onchange="toggleTask(${index})">
+
+            <span>${task.text}</span>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="edit"
+                onclick="editTask(${index})">
+
+                <i class="fa-solid fa-pen"></i>
+
+            </button>
+
+            <button class="delete"
+                onclick="deleteTask(${index})">
+
+                <i class="fa-solid fa-trash"></i>
+
+            </button>
+
+        </div>
+
+        `;
+
+        taskList.appendChild(li);
+
+    });
+
+    updateStats();
+
+}
+
+// ==========================
+// Add Task
+// ==========================
+
+addBtn.addEventListener("click", () => {
+
+    const text = taskInput.value.trim();
+
+    if (text === "") {
+
         alert("Please enter a task!");
+
         return;
+
     }
 
-    createTask(task,false);
+    tasks.push({
 
-    taskInput.value="";
+        text: text,
+
+        completed: false
+
+    });
+
+    taskInput.value = "";
 
     saveTasks();
 
-}
+    renderTasks(searchInput.value);
 
-function createTask(task,isCompleted){
+});
 
-    const li=document.createElement("li");
+// Enter Key
 
-    const taskText=document.createElement("span");
-    taskText.textContent=task;
+taskInput.addEventListener("keydown", function (e) {
 
-    if(isCompleted){
-        taskText.classList.add("completed");
+    if (e.key === "Enter") {
+
+        addBtn.click();
+
     }
 
-    // Complete task
-    taskText.addEventListener("click",function(){
+});// ==========================
+// Delete Task
+// ==========================
 
-        taskText.classList.toggle("completed");
+function deleteTask(index) {
+
+    tasks.splice(index, 1);
+
+    saveTasks();
+
+    renderTasks(searchInput.value);
+
+}
+
+// ==========================
+// Complete Task
+// ==========================
+
+function toggleTask(index) {
+
+    tasks[index].completed = !tasks[index].completed;
+
+    saveTasks();
+
+    renderTasks(searchInput.value);
+
+}
+
+// ==========================
+// Edit Task
+// ==========================
+
+function editTask(index) {
+
+    const newTask = prompt("Edit Task", tasks[index].text);
+
+    if (newTask !== null && newTask.trim() !== "") {
+
+        tasks[index].text = newTask.trim();
 
         saveTasks();
 
-        updateCounter();
+        renderTasks(searchInput.value);
 
-    });
-
-    // Edit Button
-    const editBtn=document.createElement("button");
-    editBtn.textContent="✏️";
-
-    editBtn.addEventListener("click",function(e){
-
-        e.stopPropagation();
-
-        const newTask=prompt("Edit Task",taskText.textContent);
-
-        if(newTask!==null && newTask.trim()!==""){
-
-            taskText.textContent=newTask.trim();
-
-            saveTasks();
-
-        }
-
-    });
-
-    // Delete Button
-    const deleteBtn=document.createElement("button");
-    deleteBtn.textContent="🗑️";
-
-    deleteBtn.addEventListener("click",function(e){
-
-        e.stopPropagation();
-
-        li.remove();
-
-        saveTasks();
-
-        updateCounter();
-
-    });
-
-    const buttonBox=document.createElement("div");
-
-    buttonBox.appendChild(editBtn);
-
-    buttonBox.appendChild(deleteBtn);
-
-    li.appendChild(taskText);
-
-    li.appendChild(buttonBox);
-
-    taskList.appendChild(li);
-
-    updateCounter();
+    }
 
 }
 
-// Save Tasks
-function saveTasks(){
+// ==========================
+// Search
+// ==========================
 
-    const tasks=[];
+searchInput.addEventListener("keyup", function () {
 
-    document.querySelectorAll("#taskList li").forEach(function(li){
+    renderTasks(this.value);
 
-        tasks.push({
+});
 
-            text:li.querySelector("span").textContent,
+// ==========================
+// Mobile Sidebar
+// ==========================
 
-            completed:li.querySelector("span").classList.contains("completed")
+menuBtn.addEventListener("click", () => {
 
-        });
+    sidebar.classList.toggle("show");
+    overlay.classList.toggle("show");
 
-    });
+});
 
-    localStorage.setItem("tasks",JSON.stringify(tasks));
+// Close sidebar by clicking overlay
 
-}
+overlay.addEventListener("click", () => {
 
-// Load Tasks
-function loadTasks(){
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
 
-    const tasks=JSON.parse(localStorage.getItem("tasks")) || [];
+});
 
-    taskList.innerHTML="";
+// Close sidebar after clicking menu item
 
-    tasks.forEach(function(task){
+document.querySelectorAll(".sidebar li").forEach(item => {
 
-        createTask(task.text,task.completed);
+    item.addEventListener("click", () => {
 
-    });
-
-}
-
-// Search Tasks
-function searchTasks(){
-
-    const value=searchInput.value.toLowerCase();
-
-    const tasks=document.querySelectorAll("#taskList li");
-
-    tasks.forEach(function(task){
-
-        const text=task.querySelector("span").textContent.toLowerCase();
-
-        if(text.includes(value)){
-
-            task.style.display="flex";
-
-        }
-
-        else{
-
-            task.style.display="none";
-
-        }
+        sidebar.classList.remove("show");
+        overlay.classList.remove("show");
 
     });
 
-}
+});
 
-// Update Counter
-function updateCounter(){
+// ==========================
+// Close sidebar on desktop resize
+// ==========================
 
-    const total=document.querySelectorAll("#taskList li").length;
+window.addEventListener("resize", () => {
 
-    const completed=document.querySelectorAll(".completed").length;
+    if (window.innerWidth > 768) {
 
-    const remaining=total-completed;
+        sidebar.classList.remove("show");
+        overlay.classList.remove("show");
 
-    document.getElementById("totalTasks").textContent="📋 Total : "+total;
+    }
 
-    document.getElementById("completedTasks").textContent="✅ Done : "+completed;
+});
 
-    document.getElementById("remainingTasks").textContent="⏳ Left : "+remaining;
+// ==========================
+// Start App
+// ==========================
 
-}
-
-updateCounter();
+renderTasks();
